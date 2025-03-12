@@ -20,7 +20,7 @@ export default function Navbar() {
       <nav className="navbar navbar-expand-lg navbar-dark bg-success">
         <div className="container-fluid">
           <Link className="navbar-brand gs-1 fst-italic" to="/">
-            Navbar
+            BitNow
           </Link>
           <button
             className="navbar-toggler"
