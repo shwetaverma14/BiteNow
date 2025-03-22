@@ -77,7 +77,7 @@ export default function CardComponent(props) {
         className="card-img-top"
         src={props.foodItem.img}
         alt="Card"
-        style={{ height: "150px", objectFit: "cover", width: "100%" }} // Fixed image height
+        style={{ height: "200px", objectFit: "cover", width: "100%" }} // Fixed image height
       />
       <div
         className="card-body"
@@ -95,7 +95,7 @@ export default function CardComponent(props) {
         </h5>
         <div className="container w-100" style={{ textAlign: "center" }}>
           <select
-            className="m-2 h-100 bg-success rounded"
+            className="m-1 h-80 bg-success rounded"
             onChange={(e) => setQty(parseInt(e.target.value))}
           >
             {Array.from(Array(6), (_, i) => (
@@ -106,7 +106,7 @@ export default function CardComponent(props) {
           </select>
 
           <select
-            className="m-2 h-100 bg-success rounded"
+            className="m-1 h-80 bg-success rounded"
             ref={priceRef}
             onChange={(e) => setSize(e.target.value)}
           >
