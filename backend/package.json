@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.js",
-    "start": "node index.js"
+    "dev": "nodemon index.js", 
+    "start": "node index.js",  
+    "build": "echo 'No build required for backend'" 
   },
   "author": "Shweta Verma",
   "license": "ISC",
@@ -16,7 +17,12 @@
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^6.6.1",
-    "nodemon": "^3.1.9",
     "razorpay": "^2.9.6"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9" 
+  },
+  "engines": {
+    "node": "18.x"
   }
 }
