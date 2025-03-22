@@ -1,0 +1,114 @@
+/* MyCart.module.css */
+
+.container {
+    min-height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column; /* Stack Navbar, content, and Footer vertically */
+    justify-content: space-between; /* Space between Navbar, content, and Footer */
+    align-items: center;
+    background-image: url('../screens/background.png'); /* Adjust the path to your background image */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 0 !important;
+    min-width: 0 !important;
+    font-family: 'Baloo Bhai', cursive; /* Apply Baloo Bhai font */
+    perspective: 1000px; /* Add perspective for 3D effect */
+    overflow: hidden; /* Prevent overflow from animations */
+    position: relative;
+    animation: zoomBackground 10s infinite alternate ease-in-out; /* Add zoom animation */
+}
+
+/* Zoom-in and Zoom-out Animation */
+@keyframes zoomBackground {
+    0% {
+        background-size: 100% auto; /* Initial size */
+    }
+    100% {
+        background-size: 120% auto; /* Zoomed-in size */
+    }
+}
+
+/* Navbar and Footer */
+.navbar, .footer {
+    width: 100vw; /* Full width */
+    z-index: 2; /* Ensure Navbar and Footer are above the background */
+}
+
+/* Main content */
+.cartContainer {
+    max-width: 800px;
+    width: 100%;
+    padding: 2rem;
+    background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white background */
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transform: translateZ(0); /* Initialize 3D transform */
+    transition: transform 0.5s ease, box-shadow 0.5s ease; /* Smooth transition */
+    position: relative;
+    z-index: 1; /* Ensure cart container is above the background */
+    color: black; /* Change text color to black */
+    margin: 2rem 0; /* Add margin to separate from Navbar and Footer */
+}
+
+/* 3D Zoom-in Effect on Hover */
+.cartContainer:hover {
+    transform: translateZ(50px) scale(1.05); /* Move forward and zoom in */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Enhance shadow for depth */
+}
+
+/* Cart Header */
+.cartHeader {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #333; /* Darker text color for header */
+}
+
+/* Cart Items */
+.cartItems {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.cartItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: rgba(255, 255, 255, 0.95); /* Slightly transparent white background */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.cartItem:hover {
+    transform: translateY(-5px); /* Lift the item on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhance shadow on hover */
+}
+
+/* Item Details */
+.itemDetails {
+    flex: 1;
+    margin-right: 1rem;
+}
+
+.itemName {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333; /* Darker text color for item name */
+}
+
+.itemPrice,
+.itemQuantity,
+.itemSize {
+    font-size: 1rem;
+    color: #555; /* Lighter text color for details */
+}
+
+/* Text Center */
+.textCenter {
+    text-align: center;
+}

@@ -55,7 +55,22 @@ export default function CardComponent(props) {
     <div>
       <div
         className="card"
-        style={{ width: "12rem", maxHeight: "400px", backgroundColor: "rgb(33 37 41)" }}
+        style={{
+          width: "12rem",
+          maxHeight: "400px",
+          backgroundColor: "rgb(33 37 41)",
+          border: "2px solid white",
+          marginBottom: "20px",
+          transition: "transform 0.3s ease", // Add transition for smooth effect
+          transform: "scale(1)", // Initial scale
+          cursor: "pointer", // Change cursor to pointer on hover
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = "scale(1.1)"; // Zoom in effect
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = "scale(1)"; // Zoom out effect
+        }}
       >
         <img
           className="card-img-top"

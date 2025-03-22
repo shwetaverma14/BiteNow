@@ -6,6 +6,7 @@ const OrderItemSchema = new Schema({
   price: { type: Number, required: true },
   qty: { type: Number, required: true },
   size: { type: String, required: true },
+  img: { type: String }, // Make img optional
 });
 
 const OrderSchema = new Schema({

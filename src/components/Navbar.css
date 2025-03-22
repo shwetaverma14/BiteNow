@@ -1,0 +1,34 @@
+/* Shake Animation for the entire website */
+@keyframes websiteShake {
+    0% {
+      transform: translateZ(0) rotate(0);
+    }
+    25% {
+      transform: translateZ(20px) rotate(-2deg);
+    }
+    50% {
+      transform: translateZ(0) rotate(2deg);
+    }
+    75% {
+      transform: translateZ(20px) rotate(-2deg);
+    }
+    100% {
+      transform: translateZ(0) rotate(0);
+    }
+  }
+ 
+  
+  /* Class to apply the shake animation */
+  .website-shake {
+    animation: websiteShake 0.5s ease-in-out;
+  }
+  .nav-hover {
+    color: white !important; /* Default text color */
+    transition: color 0.3s ease, background-color 0.3s ease, border-radius 0.3s ease; /* Smooth transition */
+  }
+  
+  .nav-hover:hover {
+    color: darkgrey !important; /* Change text color to dark grey on hover */
+    background-color:black; /* Optional: Add a subtle background color on hover */
+    border-radius: 8px; /* Add roundness on hover */
+  }

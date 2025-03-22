@@ -1,80 +1,94 @@
 import React, { useEffect, useState } from 'react';
 import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
+import styles from './MyOrder.module.css'; // Import the CSS module
 
 export default function MyOrder() {
-    const [orderData, setOrderData] = useState(null);
+  const [orderData, setOrderData] = useState([]);
 
-    const fetchMyOrder = async () => {
-        try {
-            let res = await fetch("http://localhost:5000/api/auth/myOrderData", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email: localStorage.getItem('userEmail') })
-            });
+  const fetchMyOrder = async () => {
+    try {
+      const userEmail = localStorage.getItem('userEmail');
+      console.log('Fetching orders for email:', userEmail); // Debug log
 
-            let response = await res.json();
-            setOrderData(response);
-        } catch (error) {
-            console.error("Error fetching orders:", error);
-        }
-    };
+      if (!userEmail) {
+        alert('Please log in to view your orders.');
+        return;
+      }
 
-    useEffect(() => {
-        fetchMyOrder();
-    }, []);
+      const res = await fetch('http://localhost:5000/api/auth/myOrderData', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: userEmail }),
+      });
 
-    return (
-        <div>
-            <Navbar />
+      const response = await res.json();
+      console.log('API Response:', JSON.stringify(response, null, 2)); // Debug log with full details
 
-            <div className="container">
-                <div className="row">
-                    {orderData && orderData.orderData ? (
-                        orderData.orderData.order_data.slice(0).reverse().map((item, index) => (
-                            <div key={index}>
-                                {item.map((arrayData, subIndex) => (
-                                    <div key={subIndex}>
-                                        {arrayData.Order_date ? (
-                                            <div className="m-auto mt-5">
-                                                <strong>{arrayData.Order_date}</strong>
-                                                <hr />
-                                            </div>
-                                        ) : (
-                                            <div className="col-12 col-md-6 col-lg-3">
-                                                <div className="card mt-3" style={{ width: "16rem", maxHeight: "360px" }}>
-                                                    <img
-                                                        src={arrayData.img}
-                                                        className="card-img-top"
-                                                        alt={arrayData.name}
-                                                        style={{ height: "120px", objectFit: "fill" }}
-                                                    />
-                                                    <div className="card-body">
-                                                        <h5 className="card-title">{arrayData.name}</h5>
-                                                        <div className="container w-100 p-0" style={{ height: "38px" }}>
-                                                            <span className="m-1">{arrayData.qty}</span>
-                                                            <span className="m-1">{arrayData.size}</span>
-                                                            <div className="d-inline ms-2 h-100 w-20 fs-5">
-                                                                ₹{arrayData.price}/-
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-                        ))
-                    ) : (
-                        <p>No orders found.</p>
-                    )}
+      if (response.success) {
+        setOrderData(response.orders); // Assuming the backend returns { success: true, orders: [...] }
+      } else {
+        console.error('Failed to fetch orders:', response.message);
+        alert('Failed to fetch orders. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+      alert('An error occurred while fetching orders.');
+    }
+  };
+
+  useEffect(() => {
+    fetchMyOrder();
+  }, []);
+
+  return (
+    <div className={styles.container}>
+      {/* Navbar at the top */}
+      <div className={styles.navbar}>
+      <Navbar />
+      </div>
+
+      {/* Main content */}
+      <div className={styles.cartContainer}>
+        <h2 className={styles.cartHeader}>My Orders</h2>
+        {orderData.length > 0 ? (
+          orderData.map((order, index) => (
+            <div key={index} className={styles.cartItem}>
+              <div className={styles.itemDetails}>
+                <div className={styles.itemName}>
+                  <strong>Order Date:</strong> {new Date(order.order_date).toLocaleString()}
                 </div>
+                <div className={styles.cartItems}>
+                  {order.order_data.map((item, subIndex) => (
+                    <div key={subIndex} className={styles.cartItem}>
+                      <div className={styles.itemDetails}>
+                        <div className={styles.itemName}>{item.name}</div>
+                        <div className={styles.itemPrice}>
+                          <strong>Price:</strong> ₹{item.price}
+                        </div>
+                        <div className={styles.itemQuantity}>
+                          <strong>Quantity:</strong> {item.qty}
+                        </div>
+                        <div className={styles.itemSize}>
+                          <strong>Size:</strong> {item.size}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
-
-            <Footer />
-        </div>
-    );
+          ))
+        ) : (
+          <p className={styles.textCenter}>No orders found.</p>
+        )}
+      </div>
+<div className={styles.footer}>
+      {/* Footer at the bottom */}
+      <Footer />
+      </div>
+    </div>
+  );
 }

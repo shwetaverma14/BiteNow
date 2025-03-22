@@ -1,0 +1,37 @@
+/* Login.module.css */
+.container {
+    min-height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 0 !important;
+    min-width: 0 !important;
+    perspective: 1000px; /* Add perspective for 3D effect */
+}
+
+.formContainer {
+    max-width: 400px;
+    width: 100%;
+    padding: 1rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transform: translateZ(0); /* Initialize 3D transform */
+    transition: transform 0.5s ease, box-shadow 0.5s ease; /* Smooth transition */
+}
+
+/* 3D Zoom-in Effect on Hover */
+.formContainer:hover {
+    transform: translateZ(50px) scale(1.05); /* Move forward and zoom in */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Enhance shadow for depth */
+}
+
+/* 3D Zoom-in Effect on Focus */
+.formContainer:focus-within {
+    transform: translateZ(50px) scale(1.05); /* Move forward and zoom in */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Enhance shadow for depth */
+}
