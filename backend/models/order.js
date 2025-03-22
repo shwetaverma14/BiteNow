@@ -13,6 +13,7 @@ const OrderSchema = new Schema({
   email: {
     type: String,
     required: true,
+    lowercase: true, // Store email in lowercase
   },
   order_data: {
     type: [OrderItemSchema], // Array of OrderItemSchema
@@ -21,6 +22,14 @@ const OrderSchema = new Schema({
   order_date: {
     type: Date,
     default: Date.now,
+  },
+  payment_id: {
+    type: String,
+    required: true,
+  },
+  order_id: {
+    type: String,
+    required: true,
   },
 });
 

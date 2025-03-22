@@ -31,7 +31,7 @@ export default function MyOrder() {
         setOrderData(response.orders); // Assuming the backend returns { success: true, orders: [...] }
       } else {
         console.error('Failed to fetch orders:', response.message);
-        alert('Failed to fetch orders. Please try again.');
+        // alert('No. Please try again.');
       }
     } catch (error) {
       console.error('Error fetching orders:', error);

@@ -42,7 +42,6 @@ export default function CardComponent(props) {
         });
 
         console.log("Added to cart:", result);
-        // ✅ Removed the navigate("/cart") call
       } else {
         console.error("Error:", result.error);
       }
@@ -52,68 +51,83 @@ export default function CardComponent(props) {
   };
 
   return (
-    <div>
+    <div
+      className="card"
+      style={{
+        width: "16rem", // Fixed width for all cards
+        height: "400px", // Fixed height for all cards
+        backgroundColor: "rgb(33 37 41)",
+        border: "2px solid white",
+        marginBottom: "20px",
+        transition: "transform 0.3s ease",
+        transform: "scale(1)",
+        cursor: "pointer",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between", // Distribute space evenly
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = "scale(1.05)"; // Zoom in effect
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = "scale(1)"; // Zoom out effect
+      }}
+    >
+      <img
+        className="card-img-top"
+        src={props.foodItem.img}
+        alt="Card"
+        style={{ height: "150px", objectFit: "cover", width: "100%" }} // Fixed image height
+      />
       <div
-        className="card"
+        className="card-body"
         style={{
-          width: "12rem",
-          maxHeight: "400px",
-          backgroundColor: "rgb(33 37 41)",
-          border: "2px solid white",
-          marginBottom: "20px",
-          transition: "transform 0.3s ease", // Add transition for smooth effect
-          transform: "scale(1)", // Initial scale
-          cursor: "pointer", // Change cursor to pointer on hover
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform = "scale(1.1)"; // Zoom in effect
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = "scale(1)"; // Zoom out effect
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          flexGrow: 1, // Allow this section to grow and take available space
+          padding: "10px",
         }}
       >
-        <img
-          className="card-img-top"
-          src={props.foodItem.img}
-          alt="Card"
-          style={{ height: "120px", objectFit: "fill" }}
-        />
-        <div className="card-body">
-          <h5 className="card-title">{props.foodItem.name}</h5>
-          <div className="container w-100">
-            <select
-              className="m-2 h-100 bg-success rounded"
-              onChange={(e) => setQty(parseInt(e.target.value))}
-            >
-              {Array.from(Array(6), (_, i) => (
-                <option key={i + 1} value={i + 1}>
-                  {i + 1}
-                </option>
-              ))}
-            </select>
-
-            <select
-              className="m-2 h-100 bg-success rounded"
-              ref={priceRef}
-              onChange={(e) => setSize(e.target.value)}
-            >
-              {priceOptions.map((data) => (
-                <option key={data} value={data}>
-                  {data}
-                </option>
-              ))}
-            </select>
-
-            <div className="d-inline h-100 fs-5">₹{finalPrice}/-</div>
-          </div>
-          <hr />
-          <button
-            className={"btn btn-success justify-center ms-2"}
-            onClick={handleAddToCart}
+        <h5 className="card-title" style={{ fontSize: "1.2rem", marginBottom: "10px", textAlign: "center" }}>
+          {props.foodItem.name}
+        </h5>
+        <div className="container w-100" style={{ textAlign: "center" }}>
+          <select
+            className="m-2 h-100 bg-success rounded"
+            onChange={(e) => setQty(parseInt(e.target.value))}
           >
-            Add to Cart
-          </button>
+            {Array.from(Array(6), (_, i) => (
+              <option key={i + 1} value={i + 1}>
+                {i + 1}
+              </option>
+            ))}
+          </select>
+
+          <select
+            className="m-2 h-100 bg-success rounded"
+            ref={priceRef}
+            onChange={(e) => setSize(e.target.value)}
+          >
+            {priceOptions.map((data) => (
+              <option key={data} value={data}>
+                {data}
+              </option>
+            ))}
+          </select>
+
+          <div className="d-inline h-100 fs-5">₹{finalPrice}/-</div>
         </div>
+      </div>
+      <div style={{ padding: "10px", textAlign: "center" }}>
+        <button
+          className="btn btn-success"
+          onClick={handleAddToCart}
+          style={{ width: "100%" }}
+        >
+          Add to Cart
+        </button>
       </div>
     </div>
   );

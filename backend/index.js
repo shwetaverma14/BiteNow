@@ -109,10 +109,31 @@ app.post('/api/auth/myOrderData', async (req, res) => {
 // Route: Handle Payment Confirmation and Save Order
 app.post('/api/payment-confirmation', async (req, res) => {
   const { payment_id, order_id, email, order_data } = req.body;
-  console.log('Payment confirmation request:', { payment_id, order_id, email, order_data }); // Debug log
+
+  // Debug log to check incoming request data
+  console.log('Payment confirmation request:', { payment_id, order_id, email, order_data });
+
+  // Validate required fields
+  if (!payment_id || !order_id || !email || !order_data) {
+    console.error('Missing required fields:', { payment_id, order_id, email, order_data });
+    return res.status(400).json({ success: false, message: 'Missing required fields.' });
+  }
+
+  // Validate order_data structure
+  if (!Array.isArray(order_data)) {
+    console.error('Invalid order_data:', order_data);
+    return res.status(400).json({ success: false, message: 'order_data must be an array.' });
+  }
+
+  for (const item of order_data) {
+    if (!item.name || !item.price || !item.qty || !item.size) {
+      console.error('Invalid item in order_data:', item);
+      return res.status(400).json({ success: false, message: 'Each item in order_data must have name, price, qty, and size.' });
+    }
+  }
 
   try {
-    // Normalize email to lowercase
+    // Normalize email to lowercase (redundant since schema handles it, but good for consistency)
     const normalizedEmail = email.toLowerCase();
 
     // Ensure each item in order_data has an img field
@@ -128,12 +149,14 @@ app.post('/api/payment-confirmation', async (req, res) => {
     const newOrder = new Order({
       email: normalizedEmail,
       order_data: validatedOrderData,
+      payment_id,
+      order_id,
       order_date: new Date(),
     });
 
     // Save the order to the database
     await newOrder.save();
-    console.log('Order saved successfully:', newOrder); // Debug log
+    console.log('Order saved successfully:', newOrder);
 
     res.json({ success: true, message: 'Order saved successfully.' });
   } catch (error) {
