@@ -1,70 +1,51 @@
-# Getting Started with Create React App
+Project : Chiranjeev
+Inspiration :
+When we all thought the pandemic was over, we were hit by it with a greater force. Each day the number of cases is increasing and with an increase in the number of people getting infected, it’s getting very hard to find hospitals with beds, ventilators, and the number of vaccines available in hospitals.
+Also, there is a huge need for plasma donation in every hospital, and thus an urgent need to make people aware of the process.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+What it does :
+We aim to provide a Web App through which people can see the number of hospitals having free beds ( with or without ventilators ) and are vaccinating people or not.
+People can also volunteer themselves for plasma donation and provide space to convert into covid centers through the web App.
+On the other hand, Hospitals can register themselves in the app and request plasma donations by the recovered patients and for extra spaces needed for the patients.
 
-## Available Scripts
+How we built it
+The frontend was implemented in react.js, using Figma for design and layout, and Axios to consume the backend.
+The backend was developed in node.js and express.js. Using some middlewares like jwt, to generate tokens, cors to enable the external ports for the frontend. And we keep the information in a NoSQL database, MongoDB.
 
-In the project directory, you can run:
+Accomplishments that we're proud of
+*Finished the project on time
+*As a team we enjoyed the process
+*Trust our idea
 
-### `npm start`
+Screenshots of the project:
+Landing Page
+screencapture-localhost-3000-2021-05-16-18_11_20
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Hospital Dashboard
+screencapture-localhost-3000-hospital-home-2021-05-16-18_13_40
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Edit Detail
+screencapture-localhost-3000-hospital-editdetails-2021-05-16-18_14_03
 
-### `npm test`
+Find Hospital For Patient
+screencapture-localhost-3000-patienthome-2021-05-16-18_11_48
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Donate Beds
+screencapture-localhost-3000-providebeds-2021-05-16-18_20_35
 
-### `npm run build`
+Installation
+Clone repository:
+$ git clone https://github.com/AbhishekSrivas114319/Chiranjeev.git
+Install dependencies:
+$ npm i
+Open .env and edit config, if it's necessary.(Put your atlas uri in backend)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Run example:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+npm start
+Note: cd ./FrontEnd and cd ./Backend, then proceed to step 2.
+Meet our team :
+Abhishek Srivas   Github Linkedin
+Himanshu Sachan   Github Linkedin
+Ujjwal Singh  Github Linkedin
+Kritanya Kardum  Behance Dribble
