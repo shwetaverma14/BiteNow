@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
-import backgroundImage from '../screens/background.png'; // Adjust the path based on your folder structure
 import styles from './Signup.module.css'; // Import the CSS Module
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;

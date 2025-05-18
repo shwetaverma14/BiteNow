@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
-import MyOrder from './MyOrder';
 import Footer from "../components/Footer";
 import Card from "../components/Card";
 
@@ -36,7 +35,7 @@ export default function Home() {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [loadData]);
 
   // Filter food items based on search keyword
   const filterFoodItems = (items, search) => {
