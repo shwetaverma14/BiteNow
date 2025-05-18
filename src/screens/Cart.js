@@ -1,55 +1,43 @@
 import React, { useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useCart, useDispatchCart } from "../components/CartContext";
-import Navbar from "../components/Navbar"; // Import Navbar
-import Footer from "../components/Footer"; // Import Footer
-import backgroundImage from '../screens/background.png'; // Import background image
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import backgroundImage from '../screens/background.png';
+
+// Get API base URL from environment variables
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 export default function Cart() {
-  const data = useCart(); // data is an object with cartItems and dispatch
+  const data = useCart();
   const dispatch = useDispatchCart();
-  const [loading, setLoading] = useState(false); // Add loading state
-
-  // Use data.cartItems instead of data
+  const [loading, setLoading] = useState(false);
   const cartItems = data.cartItems || [];
-
-  // Calculate total price using cartItems
   const totalPrice = cartItems.reduce((total, food) => total + food.price * food.qty, 0);
 
-  // Load Razorpay script dynamically
   const loadRazorpayScript = (src) => {
     return new Promise((resolve) => {
       const script = document.createElement('script');
       script.src = src;
-      script.onload = () => {
-        resolve(true);
-      };
-      script.onerror = () => {
-        resolve(false);
-      };
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
       document.body.appendChild(script);
     });
   };
 
-  // Handle payment confirmation
   const handlePaymentConfirmation = async (payment_id, order_id, email, order_data) => {
-    console.log('Payment confirmation data:', { payment_id, order_id, email, order_data }); // Debug log
-  
     try {
-      const res = await fetch('http://localhost:5000/api/payment-confirmation', {
+      const res = await fetch(`${API_BASE_URL}/api/payment-confirmation`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ payment_id, order_id, email, order_data }),
       });
   
       const response = await res.json();
-      console.log('Payment confirmation response:', response); // Debug log
-  
+      
       if (response.success) {
         alert('Order placed successfully!');
-        dispatch({ type: "CLEAR_CART" }); // Clear the cart
+        dispatch({ type: "CLEAR_CART" });
       } else {
         alert('Failed to confirm payment. Please try again.');
       }
@@ -59,69 +47,54 @@ export default function Cart() {
     }
   };
 
-  // Handle checkout
   const handleCheckOut = async () => {
     const authToken = localStorage.getItem('authToken');
     const userEmail = localStorage.getItem('userEmail');
-    console.log('Retrieved authToken from localStorage:', authToken); // Debug log
-    console.log('Retrieved userEmail from localStorage:', userEmail); // Debug log
   
-    // Check if the user is logged in
     if (!authToken || !userEmail) {
       alert('Please log in to place an order.');
       return;
     }
   
-    setLoading(true); // Start loading
+    setLoading(true);
   
     try {
-      // Step 1: Create a Razorpay order
-      const response = await fetch('http://localhost:5000/api/create-order', {
+      // Create Razorpay order using the Render backend
+      const response = await fetch(`${API_BASE_URL}/api/create-order`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${authToken}`, // Include auth token in the request
+          Authorization: `Bearer ${authToken}`,
         },
-        body: JSON.stringify({
-          amount: totalPrice * 100, // Convert to paise
-        }),
+        body: JSON.stringify({ amount: totalPrice * 100 }),
       });
   
-      console.log('Create Order Response:', response); // Debug log
-  
-      if (!response.ok) {
-        throw new Error('Failed to create order');
-      }
+      if (!response.ok) throw new Error('Failed to create order');
   
       const order = await response.json();
-      console.log('Razorpay Order:', order); // Debug log
       const { id: orderId, amount, currency } = order;
   
-      // Step 2: Load Razorpay script
+      // Load Razorpay script
       const isScriptLoaded = await loadRazorpayScript('https://checkout.razorpay.com/v1/checkout.js');
-      if (!isScriptLoaded) {
-        throw new Error('Failed to load Razorpay script');
-      }
+      if (!isScriptLoaded) throw new Error('Failed to load Razorpay script');
   
-      // Step 3: Initialize Razorpay payment
+      // Initialize Razorpay payment
       const options = {
-        key: process.env.REACT_APP_RAZORPAY_KEY_ID, // Use environment variable
-        amount: amount, // Amount in paise
+        key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+        amount: amount,
         currency: currency || 'INR',
         name: 'Your Company Name',
         description: 'Payment for your order',
-        order_id: orderId, // Use the order ID from Razorpay
+        order_id: orderId,
         handler: function (response) {
-          // Handle payment success
           const { razorpay_payment_id, razorpay_order_id } = response;
           const order_data = cartItems.map(item => ({
             name: item.name,
             price: item.price,
             qty: item.qty,
             size: item.size,
-            img: item.img || 'default_image_url', // Ensure img is provided
+            img: item.img || 'default_image_url',
           }));
-  
           handlePaymentConfirmation(razorpay_payment_id, razorpay_order_id, userEmail, order_data);
         },
         prefill: {
@@ -129,21 +102,16 @@ export default function Cart() {
           email: userEmail,
           contact: '9999999999',
         },
-        notes: {
-          address: 'Customer Address',
-        },
-        theme: {
-          color: '#F37254',
-        },
+        theme: { color: '#F37254' },
       };
   
-      const rzp = new window.Razorpay(options); // Use window.Razorpay
+      const rzp = new window.Razorpay(options);
       rzp.open();
     } catch (error) {
       console.error('Payment failed:', error);
-      alert('Payment failed. Please try again.');
+      alert(`Payment failed: ${error.message}`);
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 

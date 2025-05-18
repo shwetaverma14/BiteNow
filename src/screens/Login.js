@@ -3,13 +3,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import backgroundImage from '../screens/background.png';
 import styles from './Signup.module.css';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 export default function Login() {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch('http://localhost:5000/api/loginuser', {
+    const response = await fetch(`${API_BASE_URL}/api/loginuser`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

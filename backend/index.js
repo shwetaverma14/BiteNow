@@ -41,11 +41,17 @@ app.post('/api/verify-payment', async (req, res) => {
 });
 
 // Middleware for CORS
+// Update your CORS middleware to this:
 app.use(
   cors({
-    origin: 'http://localhost:3000', // Allow requests from this origin
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow these HTTP methods
-    allowedHeaders: ['Content-Type', 'Authorization'], // Allow these headers
+    origin: [
+      'http://localhost:3000', // Your local development server
+      'https://your-netlify-site.netlify.app', // Your Netlify frontend (replace with actual URL)
+      'https://bitenow-in0i.onrender.com' // Your Render backend (for any direct API testing)
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true // If you're using cookies/auth tokens
   })
 );
 

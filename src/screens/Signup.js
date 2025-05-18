@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import backgroundImage from '../screens/background.png'; // Adjust the path based on your folder structure
 import styles from './Signup.module.css'; // Import the CSS Module
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 export default function Signup() {
   const [credentials, setCredentials] = useState({ name: "", email: "", password: "", geolocation: "" });
   const [errorMessage, setErrorMessage] = useState(""); // State to track error messages
@@ -14,7 +15,7 @@ export default function Signup() {
     setErrorMessage(""); // Reset error message on new submission
     setSuccessMessage(""); // Reset success message on new submission
 
-    const response = await fetch('http://localhost:5000/api/createuser', {
+    const response = await fetch(`${API_BASE_URL}/api/createuser`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

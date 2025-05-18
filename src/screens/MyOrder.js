@@ -3,6 +3,7 @@ import Footer from '../components/Footer';
 import Navbar from '../components/Navbar';
 import styles from './MyOrder.module.css'; // Import the CSS module
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 export default function MyOrder() {
   const [orderData, setOrderData] = useState([]);
 
@@ -16,7 +17,7 @@ export default function MyOrder() {
         return;
       }
 
-      const res = await fetch('http://localhost:5000/api/auth/myOrderData', {
+      const res = await fetch(`${API_BASE_URL}/api/auth/myOrderData`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
