@@ -93,6 +93,53 @@ The **backend** is developed using **Node.js** and **Express.js**, with middlewa
 Follow these steps to set up the project locally:
 
 ### 1. Clone Repository
+
 ```bash
 git clone https://github.com/shwetaverma14/BiteNow.git
 cd BiteNow
+```
+
+### 2. Open in VS Code
+
+```bash
+code .
+```
+
+### 3. Install dependencies for backend
+
+```bash
+npm install
+```
+
+### 4. Install dependencies for frontend
+
+```bash
+cd client
+npm install
+cd ..
+```
+
+### 5. Set up environment variables
+
+- **Backend**:
+  - Copy `.env.example` to `.env` inside the `/backend` folder.
+  - Update the values (e.g., MongoDB URI, JWT secret).
+
+- **Frontend**:
+  - Configure environment variables if needed in `/client/src`.
+
+### 6. Run the Application
+
+```bash
+# Run the backend
+npm run dev
+```
+
+```bash
+# In a new terminal, run the frontend
+cd client
+npm start
+```
+
+🙌 Thanks for checking out **BiteNow**!
+
