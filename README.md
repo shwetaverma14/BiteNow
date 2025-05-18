@@ -1,4 +1,6 @@
 # Project : BiteNow
+# Live Website: 
+[https://bitnoww.netlify.app](https://bitnoww.netlify.app)
 # Inspiration : 
 In a world where convenience meets necessity, BiteNow emerges as a seamless and efficient food delivery platform, designed to bring delicious meals right to your doorstep. Whether you're craving a quick bite or a lavish feast, BiteNow offers a hassle-free experience—from easy registration and login to exploring a diverse range of food categories, adding your favorite meals to My Cart, and tracking your orders in My Orders.<br>
 We live in a fast-paced world where time is of the essence. BiteNow ensures that your food cravings are met with just a few taps, saving you time and effort. With an intuitive interface and a smooth ordering process, it redefines food delivery, making it simpler, faster, and more reliable.<br>
