@@ -5,13 +5,13 @@ const cartRoutes = require('./Routes/CartRoutes');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const Order = require('./models/order');
-const FoodItem = require('./models/CartItem'); // Make sure to import your FoodItem model
 
 dotenv.config();
 
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 5000;
 
+// Initialize Razorpay only once
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
@@ -34,21 +34,9 @@ app.use(
 app.use(express.json());
 mongoDb();
 
-// Add this new route to clean existing data (temporary)
-app.post('/api/clean-food-data', async (req, res) => {
-  try {
-    const result = await FoodItem.updateMany(
-      {},
-      { $unset: { hair: "", description: "" } },
-      { multi: true }
-    );
-    res.json({ success: true, result });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
+// Remove the /api/clean-food-data route since it's not needed
 
-// Existing routes
+// API Routes
 app.get('/', (req, res) => res.send('Hello World!'));
 app.use('/api', require('./Routes/CreateUser'));
 app.use('/api', require('./Routes/DisplayData'));
