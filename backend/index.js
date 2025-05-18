@@ -4,7 +4,7 @@ const mongoDb = require('./db.js');
 const cartRoutes = require('./Routes/CartRoutes');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const Order = require('./models/Order');
+const Order = require('./models/order');
 const FoodItem = require('./models/CartItem'); // Make sure to import your FoodItem model
 
 dotenv.config();
