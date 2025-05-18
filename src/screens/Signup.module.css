@@ -54,19 +54,19 @@
     transition: transform 0.5s ease, box-shadow 0.5s ease; /* Smooth transition */
     position: relative;
     z-index: 1; /* Ensure form is above the background */
-    color: black; /* Change text color to black */
+    color: black; 
 }
 
 /* 3D Zoom-in Effect on Hover */
 .formContainer:hover {
     transform: translateZ(50px) scale(1.05); /* Move forward and zoom in */
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Enhance shadow for depth */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); 
 }
 
 /* 3D Zoom-in Effect on Focus */
 .formContainer:focus-within {
     transform: translateZ(50px) scale(1.05); /* Move forward and zoom in */
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Enhance shadow for depth */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); 
 }
 
 /* Remove default form styles */
@@ -78,7 +78,7 @@
 .formContainer .form-label {
     font-family: 'Baloo Bhai', cursive;
     font-size: 1.2rem;
-    color: black; /* Change text color to black */
+    color: black; 
 }
 
 .formContainer .form-control {
@@ -88,13 +88,13 @@
     padding: 0.5rem;
     width: 100%;
     margin-bottom: 1rem;
-    color: black; /* Change text color to black */
+    color: black;
 }
 
 .formContainer .form-text {
     font-family: 'Baloo Bhai', cursive;
     font-size: 0.9rem;
-    color: black; /* Change text color to black */
+    color: black; 
 }
 
 .formContainer .btn {

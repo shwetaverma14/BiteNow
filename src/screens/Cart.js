@@ -12,6 +12,7 @@ export default function Cart() {
   const data = useCart();
   const dispatch = useDispatchCart();
   const [loading, setLoading] = useState(false);
+  const [paymentError, setPaymentError] = useState(null);
   const cartItems = data.cartItems || [];
   const totalPrice = cartItems.reduce((total, food) => total + food.price * food.qty, 0);
 
@@ -36,14 +37,14 @@ export default function Cart() {
       const response = await res.json();
       
       if (response.success) {
-        alert('Order placed successfully!');
         dispatch({ type: "CLEAR_CART" });
+        return { success: true };
       } else {
-        alert('Failed to confirm payment. Please try again.');
+        return { success: false, message: response.message || 'Payment confirmation failed' };
       }
     } catch (error) {
       console.error('Error confirming payment:', error);
-      alert('An error occurred while confirming payment.');
+      return { success: false, message: 'Network error during payment confirmation' };
     }
   };
 
@@ -56,8 +57,12 @@ export default function Cart() {
       return;
     }
   
+    if (cartItems.length === 0) {
+      setPaymentError('Your cart is empty.');
+      return;
+    }
     setLoading(true);
-  
+    setPaymentError(null);
     try {
       // Create Razorpay order using the Render backend
       const response = await fetch(`${API_BASE_URL}/api/create-order`, {
@@ -114,6 +119,7 @@ export default function Cart() {
       setLoading(false);
     }
   };
+  
 
   return (
     <div style={{ 

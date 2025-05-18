@@ -5,23 +5,35 @@ const CartContext = createContext();
 const cartReducer = (state, action) => {
   switch (action.type) {
     case 'ADD':
-      const existingItem = state.find(item => item.id === action.id);
+      const existingItem = state.find(item => 
+        item.id === action.id && item.size === action.size
+      );
+      
       if (existingItem) {
         return state.map(item =>
-          item.id === action.id ? { ...item, qty: item.qty + action.qty } : item
+          item.id === action.id && item.size === action.size
+            ? { ...item, qty: item.qty + action.qty }
+            : item
         );
       }
-      return [...state, { id: action.id, name: action.name, price: action.price, qty: action.qty, size: action.size }];
+      return [...state, { 
+        id: action.id, 
+        name: action.name, 
+        price: action.price, 
+        qty: action.qty, 
+        size: action.size,
+        img: action.img 
+      }];
 
     case 'REMOVE':
-      return state.filter((item, index) => index !== action.index);
+      return state.filter((_, index) => index !== action.index);
 
     case 'UPDATE':
-      return state.map(item =>
-        item.id === action.id ? { ...item, qty: action.qty } : item
+      return state.map((item, index) =>
+        index === action.index ? { ...item, qty: action.qty } : item
       );
 
-    case 'DROP':
+    case 'CLEAR':
       return [];
 
     default:
@@ -32,14 +44,26 @@ const cartReducer = (state, action) => {
 export const CartProvider = ({ children }) => {
   const [cartItems, dispatch] = useReducer(cartReducer, []);
 
+  // Calculate total items in cart
+  const totalItems = cartItems.reduce((sum, item) => sum + item.qty, 0);
+
+  // Calculate total price
+  const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+  const value = {
+    cartItems,
+    totalItems,
+    totalPrice,
+    dispatch
+  };
+
   return (
-    <CartContext.Provider value={{ cartItems, dispatch }}>
+    <CartContext.Provider value={value}>
       {children}
     </CartContext.Provider>
   );
 };
 
-// Export useCart and useDispatchCart
 export const useCart = () => useContext(CartContext);
 export const useDispatchCart = () => {
   const { dispatch } = useContext(CartContext);

@@ -2,175 +2,107 @@ const express = require('express');
 const Razorpay = require('razorpay');
 const mongoDb = require('./db.js');
 const cartRoutes = require('./Routes/CartRoutes');
-const cors = require('cors'); // Import the cors package
+const cors = require('cors');
 const dotenv = require('dotenv');
-const Order = require('./models/order'); // Import the Order model
+const Order = require('./models/order');
+const FoodItem = require('./models/FoodItems'); // Make sure to import your FoodItem model
 
-// Load environment variables
 dotenv.config();
-
-// Debug logs to verify environment variables
-console.log('Razorpay Key ID:', process.env.RAZORPAY_KEY_ID);
-console.log('Razorpay Key Secret:', process.env.RAZORPAY_KEY_SECRET);
 
 const app = express();
 const port = 5000;
 
-// Initialize Razorpay
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-app.post('/api/verify-payment', async (req, res) => {
-  const { payment_id } = req.body;
-
-  try {
-    const payment = await razorpay.payments.fetch(payment_id);
-    console.log('Payment details:', payment); // Debug log
-
-    if (payment.status === 'captured') {
-      res.json({ success: true, message: 'Payment verified successfully.' });
-    } else {
-      res.status(400).json({ success: false, message: 'Payment not captured.' });
-    }
-  } catch (error) {
-    console.error('Error verifying payment:', error);
-    res.status(500).json({ success: false, message: 'Failed to verify payment.' });
-  }
-});
-
-// Middleware for CORS
-// Update your CORS middleware to this:
+// Enhanced CORS configuration
 app.use(
   cors({
     origin: [
-      'http://localhost:3000', // Your local development server
-      'https://your-netlify-site.netlify.app', // Your Netlify frontend (replace with actual URL)
-      'https://bitenow-in0i.onrender.com' // Your Render backend (for any direct API testing)
+      'http://localhost:3000',
+      'https://your-netlify-site.netlify.app',
+      'https://bitenow-in0i.onrender.com'
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true // If you're using cookies/auth tokens
+    credentials: true
   })
 );
 
-// Middleware for parsing JSON
 app.use(express.json());
-
-// Connect to MongoDB
 mongoDb();
 
-// Routes
-app.get('/', (req, res) => {
-  res.send('Hello World!');
+// Add this new route to clean existing data (temporary)
+app.post('/api/clean-food-data', async (req, res) => {
+  try {
+    const result = await FoodItem.updateMany(
+      {},
+      { $unset: { hair: "", description: "" } },
+      { multi: true }
+    );
+    res.json({ success: true, result });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
 });
 
+// Existing routes
+app.get('/', (req, res) => res.send('Hello World!'));
 app.use('/api', require('./Routes/CreateUser'));
 app.use('/api', require('./Routes/DisplayData'));
 app.use('/api/cart', cartRoutes);
 
-// New Route: Create Razorpay Order
+// Payment routes
 app.post('/api/create-order', async (req, res) => {
-  const { amount } = req.body;
-
-  const options = {
-    amount: amount, // Amount in paise
-    currency: 'INR',
-    receipt: `order_receipt_${Date.now()}`,
-  };
-
   try {
-    const order = await razorpay.orders.create(options);
+    const order = await razorpay.orders.create({
+      amount: req.body.amount,
+      currency: 'INR',
+      receipt: `order_receipt_${Date.now()}`,
+    });
     res.json(order);
   } catch (error) {
-    console.error('Error creating Razorpay order:', error);
+    console.error('Error creating order:', error);
     res.status(500).json({ error: 'Failed to create order' });
   }
 });
 
-// Route: Fetch Order History for a User
 app.post('/api/auth/myOrderData', async (req, res) => {
-  const { email } = req.body;
-  console.log('Fetching orders for email:', email); // Debug log
-
   try {
-    // Normalize email to lowercase
-    const normalizedEmail = email.toLowerCase();
-
-    // Fetch orders from the database for the given email
-    const orders = await Order.find({ email: normalizedEmail }).sort({ order_date: -1 });
-    console.log('Orders found:', orders); // Debug log
-
-    if (orders.length > 0) {
-      res.json({ success: true, orders });
-    } else {
-      res.json({ success: false, message: 'No orders found for this user.' });
-    }
+    const orders = await Order.find({ email: req.body.email.toLowerCase() })
+      .sort({ order_date: -1 });
+    res.json({ success: true, orders });
   } catch (error) {
     console.error('Error fetching orders:', error);
     res.status(500).json({ success: false, message: 'Failed to fetch orders.' });
   }
 });
-// Route: Handle Payment Confirmation and Save Order
+
 app.post('/api/payment-confirmation', async (req, res) => {
-  const { payment_id, order_id, email, order_data } = req.body;
-
-  // Debug log to check incoming request data
-  console.log('Payment confirmation request:', { payment_id, order_id, email, order_data });
-
-  // Validate required fields
-  if (!payment_id || !order_id || !email || !order_data) {
-    console.error('Missing required fields:', { payment_id, order_id, email, order_data });
-    return res.status(400).json({ success: false, message: 'Missing required fields.' });
-  }
-
-  // Validate order_data structure
-  if (!Array.isArray(order_data)) {
-    console.error('Invalid order_data:', order_data);
-    return res.status(400).json({ success: false, message: 'order_data must be an array.' });
-  }
-
-  for (const item of order_data) {
-    if (!item.name || !item.price || !item.qty || !item.size) {
-      console.error('Invalid item in order_data:', item);
-      return res.status(400).json({ success: false, message: 'Each item in order_data must have name, price, qty, and size.' });
-    }
-  }
-
   try {
-    // Normalize email to lowercase (redundant since schema handles it, but good for consistency)
-    const normalizedEmail = email.toLowerCase();
-
-    // Ensure each item in order_data has an img field
-    const validatedOrderData = order_data.map(item => ({
-      name: item.name,
-      price: item.price,
-      qty: item.qty,
-      size: item.size,
-      img: item.img || 'default_image_url', // Provide a default image URL if img is missing
-    }));
-
-    // Create a new order document
     const newOrder = new Order({
-      email: normalizedEmail,
-      order_data: validatedOrderData,
-      payment_id,
-      order_id,
+      email: req.body.email.toLowerCase(),
+      order_data: req.body.order_data.map(item => ({
+        name: item.name,
+        price: item.price,
+        qty: item.qty,
+        size: item.size,
+        img: item.img || 'default_image_url',
+      })),
+      payment_id: req.body.payment_id,
+      order_id: req.body.order_id,
       order_date: new Date(),
     });
-
-    // Save the order to the database
     await newOrder.save();
-    console.log('Order saved successfully:', newOrder);
-
     res.json({ success: true, message: 'Order saved successfully.' });
   } catch (error) {
-    console.error('Error confirming payment and saving order:', error);
-    res.status(500).json({ success: false, message: 'Failed to confirm payment and save order.' });
+    console.error('Error confirming payment:', error);
+    res.status(500).json({ success: false, message: 'Failed to save order.' });
   }
 });
-// Start the server
+
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });

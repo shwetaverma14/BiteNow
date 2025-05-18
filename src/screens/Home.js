@@ -57,108 +57,128 @@ export default function Home() {
   };
 
   return (
-    <div>
-      {/* Navbar */}
-      <div><Navbar /></div>
+  <div>
+    {/* Navbar */}
+    <div><Navbar /></div>
 
-      {/* Carousel with Search Bar */}
-      <div>
-        <div
-          id="carouselExampleControls"
-          className="carousel slide carousel-fade"
-          data-bs-ride="carousel"
-          data-bs-interval="5000" // Transition every 5 seconds
-          style={{ height: "80vh", width: "100%" }} // Set height to 80vh and width to 100%
-        >
-          <div className="carousel-inner" id='carousel'>
-            <div className="carousel-item active" style={{ height: "80vh" }}>
-              {/* Centered Search Bar with Search Button */}
-              <div className="d-flex justify-content-center align-items-center" style={{ height: "100px", position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", zIndex: "20" }}>
-                <div className="input-group" style={{ width: "100%" }}>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Search..."
-                    aria-label="Search"
-                    aria-describedby="search-addon"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                  />
-                  <button className="btn btn-primary" type="button" id="search-addon" style={{ backgroundColor: "rgb(25 135 84)", color: "white" }}>Search
-                    <i className="fas fa-search"></i>
-                  </button>
-                </div>
+    {/* Carousel with Search Bar */}
+    <div>
+      <div
+        id="carouselExampleControls"
+        className="carousel slide carousel-fade"
+        data-bs-ride="carousel"
+        data-bs-interval="5000"
+        style={{ height: "80vh", width: "100%" }}
+      >
+        <div className="carousel-inner" id='carousel'>
+          <div className="carousel-item active" style={{ height: "80vh" }}>
+            <div className="d-flex justify-content-center align-items-center" style={{ height: "100px", position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", zIndex: "20" }}>
+              <div className="input-group" style={{ width: "100%" }}>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Search..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+                <button className="btn btn-primary" type="button" id="search-addon" style={{ backgroundColor: "rgb(25 135 84)", color: "white" }}>
+                  Search <i className="fas fa-search"></i>
+                </button>
               </div>
-              <img
-                src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd"
-                style={{ 
-                  objectFit: "cover", 
-                  height: "80vh", 
-                  width: "100%", 
-                  filter: "brightness(30%)",
-                  animation: "zoomIn 5s ease-in-out infinite alternate" // Add zoom-in animation
-                }}
-                className="d-block w-100"
-                alt="Burger"
-              />
             </div>
+            <img
+              src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd"
+              style={{ 
+                objectFit: "cover", 
+                height: "80vh", 
+                width: "100%", 
+                filter: "brightness(30%)",
+                animation: "zoomIn 5s ease-in-out infinite alternate"
+              }}
+              className="d-block w-100"
+              alt="Burger"
+            />
           </div>
         </div>
       </div>
-
-      {/* Food Categories and Items */}
-      <div className='container'>
-        {foodCat.length > 0
-          ? foodCat.map((data) => {
-              const filteredItems = filterFoodItems(
-                foodItem.filter((item) => item.CategoryName === data.CategoryName),
-                search
-              );
-
-              return (
-                <div className='row mb-3' key={data._id}>
-                  <div className="fs-3 m-3">
-                    {data.CategoryName}
-                  </div>
-                  <hr />
-                  {filteredItems.length > 0
-                    ? filteredItems.map((filterItems) => {
-                        return (
-                          <div key={filterItems._id} className="col-12 col-md-6 col-lg-3">
-                            <Card
-                              foodItem={filterItems}
-                              options={filterItems.options?.[0] || {}}
-                              onError={(e) => {
-                                e.target.onerror = null;
-                                e.target.src = "https://via.placeholder.com/150";
-                              }}
-                            />
-                          </div>
-                        );
-                      })
-                    : <div>No Such Data Found</div>}
-                </div>
-              );
-            })
-          : <div>Loading...</div>}
-      </div>
-
-      {/* Footer */}
-      <div><Footer /></div>
-
-      {/* Add zoom-in animation keyframes */}
-      <style>
-        {`
-          @keyframes zoomIn {
-            from {
-              transform: scale(1);
-            }
-            to {
-              transform: scale(1.1);
-            }
-          }
-        `}
-      </style>
     </div>
-  );
+
+    {/* Food Categories and Items - MODIFIED SECTION */}
+    <div className='container'>
+      {foodCat.length > 0
+        ? foodCat.map((data) => {
+            const filteredItems = filterFoodItems(
+              foodItem.filter((item) => item.CategoryName === data.CategoryName),
+              search
+            );
+
+            return (
+              <div key={data._id} style={{ marginBottom: "40px" }}>
+                <h2 style={{
+                  textAlign: "center",
+                  marginBottom: "20px",
+                  position: "relative",
+                  paddingBottom: "10px"
+                }}>
+                  {data.CategoryName}
+                  <span style={{
+                    position: "absolute",
+                    bottom: 0,
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    width: "80px",
+                    height: "3px",
+                    backgroundColor: "#28a745"
+                  }}></span>
+                </h2>
+                
+                <div style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+                  gap: "25px",
+                  justifyContent: "center"
+                }}>
+                  {filteredItems.length > 0
+                    ? filteredItems.map((filterItems) => (
+                        <div key={filterItems._id} style={{ display: "flex", justifyContent: "center" }}>
+                          <Card
+                            foodItem={filterItems}
+                            options={filterItems.options?.[0] || {}}
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = "https://via.placeholder.com/150";
+                            }}
+                          />
+                        </div>
+                      ))
+                    : <div style={{ textAlign: "center", gridColumn: "1/-1" }}>No Such Data Found</div>}
+                </div>
+              </div>
+            );
+          })
+        : <div style={{ 
+            display: "flex", 
+            justifyContent: "center", 
+            alignItems: "center", 
+            height: "200px"
+          }}>
+            <div className="spinner-border text-success" role="status">
+              <span className="sr-only">Loading...</span>
+            </div>
+          </div>}
+    </div>
+
+    {/* Footer */}
+    <div><Footer /></div>
+
+    <style>
+      {`
+        @keyframes zoomIn {
+          from { transform: scale(1); }
+          to { transform: scale(1.1); }
+        }
+      `}
+    </style>
+  </div>
+);
 }
