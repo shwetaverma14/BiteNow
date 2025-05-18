@@ -23,6 +23,7 @@ app.use(
     origin: [
       'http://localhost:3000',
       'https://bitnoww.netlify.app',
+      'https://main--bitnoww.netlify.app',
       'https://bitenow-in0i.onrender.com'
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
