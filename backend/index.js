@@ -22,7 +22,7 @@ app.use(
   cors({
     origin: [
       'http://localhost:3000',
-      'https://https://bitnoww.netlify.app',
+      'https://bitnoww.netlify.app',
       'https://bitenow-in0i.onrender.com'
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
